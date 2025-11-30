@@ -11,20 +11,20 @@ interface DetalleVenta {
     id: number;
     producto: { nombre: string };
     cantidad: number;
-    precioUnitarioBase: number;
+    precio_unitario_base: number;
     iva: number;
-    precioUnitarioConIva: number;
-    subtotalConIva: number;
+    precio_unitario_con_iva: number;
+    subtotal_con_iva: number;
 }
 
 interface Venta {
     id: number;
-    fechaHora: string;
-    vendedor: { nombre: string };
+    fecha_hora: string;
+    usuario: { nombre: string };
     subtotal: number;
-    totalIva: number;
+    total_iva: number;
     total: number;
-    metodoPago: string;
+    metodo_pago: string;
     detalles: DetalleVenta[];
     montoPagado?: number;
     vuelto?: number;

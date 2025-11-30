@@ -10,22 +10,22 @@ interface DetalleVenta {
         nombre: string;
     };
     cantidad: number;
-    precioUnitarioBase: number;
+    precio_unitario_base: number;
     iva: number;
-    precioUnitarioConIva: number;
-    subtotalConIva: number;
+    precio_unitario_con_iva: number;
+    subtotal_con_iva: number;
 }
 
 interface Venta {
     id: number;
-    fechaHora: string;
-    vendedor: {
+    fecha_hora: string;
+    usuario?: {
         nombre: string;
     };
     subtotal: number;
-    totalIva: number;
+    total_iva: number;
     total: number;
-    metodoPago: string;
+    metodo_pago: string;
     detalles: DetalleVenta[];
 }
 
@@ -52,7 +52,7 @@ const BoletaView = ({
 }: BoletaViewProps) => {
     
     const formatPrice = (val: number) => `$${val.toLocaleString("es-CL")}`;
-    const fechaObj = new Date(venta.fechaHora);
+    const fechaObj = new Date(venta.fecha_hora);
     
     return (
         <div className={className}>
@@ -89,7 +89,7 @@ const BoletaView = ({
                         </div>
                         <div>
                             <p className="text-gray-600 dark:text-gray-400">Vendedor</p>
-                            <p className="font-semibold text-gray-900 dark:text-white">{venta.vendedor.nombre}</p>
+                            <p className="font-semibold text-gray-900 dark:text-white">{venta.usuario?.nombre}</p>
                         </div>
                     </div>
                 </div>
@@ -105,11 +105,11 @@ const BoletaView = ({
                                             {detalle.producto.nombre}
                                         </p>
                                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                            {detalle.cantidad} x {formatPrice(detalle.precioUnitarioConIva)}
+                                            {detalle.cantidad} x {formatPrice(detalle.precio_unitario_con_iva)}
                                         </p>
                                     </div>
                                     <p className="font-bold text-gray-900 dark:text-white">
-                                        {formatPrice(detalle.subtotalConIva)}
+                                        {formatPrice(detalle.subtotal_con_iva)}
                                     </p>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@ const BoletaView = ({
                         </div>
                         <div className="flex justify-between">
                             <span className="text-gray-600 dark:text-gray-400">IVA (19%):</span>
-                            <span className="font-medium text-gray-900 dark:text-white">{formatPrice(venta.totalIva)}</span>
+                            <span className="font-medium text-gray-900 dark:text-white">{formatPrice(venta.total_iva)}</span>
                         </div>
                     </div>
                     <div className="flex justify-between text-xl font-bold border-t border-gray-300 dark:border-gray-600 pt-3">
@@ -137,7 +137,7 @@ const BoletaView = ({
                 <div className="mb-6 pb-6 border-b border-gray-200 dark:border-gray-600">
                     <div className="flex justify-between items-center mb-3">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Método de pago:</span>
-                        <Badge variant="blue">{venta.metodoPago}</Badge>
+                        <Badge variant="blue">{venta.metodo_pago}</Badge>
                     </div>
                     
                     {montoPagado !== undefined && (
