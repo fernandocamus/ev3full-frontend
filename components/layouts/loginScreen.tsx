@@ -27,9 +27,9 @@ const LoginScreen = () => {
 
         setLoading(true);
 
-        /*
+        
         try {
-            const response = await fetch("http://localhost:8080/api/auth/login", {
+            const response = await fetch("http://localhost:3000/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -44,19 +44,30 @@ const LoginScreen = () => {
                 throw new Error("Credenciales incorrectas");
             }
 
-            const data = await response.json();
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.usuario));
+            
 
-            if (data.usuario.rol === "ADMIN") {
+            const data = await response.json();
+            localStorage.setItem("token", data.access_token);
+
+            const usuarioParaGuardar = {
+                nombre: data.nombre,
+                correo: data.correo,
+                rol: data.rol
+            }
+
+            localStorage.setItem("user", JSON.stringify(usuarioParaGuardar));
+
+            console.log("LOGIN EXITOSO:", data);
+
+            if (data.rol === "ADMIN") {
                 navigate("/dashboard");
-            } else if (data.usuario.rol === "VENDEDOR") {
+            } else if (data.rol === "VENDEDOR") {
                 navigate("/venta");
             } else {
                 navigate("/");
             }
-        */
-       
+        
+       /*
         try {
             // Simulación de espera de red
             await new Promise(resolve => setTimeout(resolve, 1500));
@@ -84,7 +95,7 @@ const LoginScreen = () => {
             } else {
                 setError("El correo o la contraseña son incorrectos.");
             }
-
+        */
         } catch (err) {
             console.error(err);
             setError("Hubo un problema de conexión. Intenta nuevamente.");
