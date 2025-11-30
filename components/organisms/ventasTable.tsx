@@ -10,12 +10,12 @@ import { HiEye, HiShoppingBag, HiCash } from "react-icons/hi";
 
 interface Venta {
     id: number;
-    fechaHora: string;
+    fecha_hora: string;
     vendedor: {
         nombre: string;
     };
     total: number;
-    metodoPago: "EFECTIVO" | "TARJETA" | "TRANSFERENCIA";
+    metodo_pago: "EFECTIVO" | "TARJETA" | "TRANSFERENCIA";
 }
 
 interface VentasTableProps {
@@ -47,7 +47,7 @@ const VentasTable = ({
     });
 
     // Lógica de colores (Sin usar 'any')
-    const getMetodoPagoVariant = (metodo: string) => {
+    const getmetodo_pagoVariant = (metodo: string) => {
         switch (metodo) {
             case "EFECTIVO": return "green";
             case "TARJETA": return "blue";
@@ -61,7 +61,7 @@ const VentasTable = ({
         const matchSearch =
             v.id.toString().includes(searchValue) ||
             v.vendedor.nombre.toLowerCase().includes(searchValue.toLowerCase());
-        const matchFilter = !filterValue || v.metodoPago === filterValue;
+        const matchFilter = !filterValue || v.metodo_pago === filterValue;
         return matchSearch && matchFilter;
     });
 
@@ -73,7 +73,7 @@ const VentasTable = ({
     // Cálculo Total (Fuera del JSX)
     const totalMostrado = ventasFiltradas.reduce((sum, v) => sum + v.total, 0);
 
-    const metodoPagoOptions = [
+    const metodo_pagoOptions = [
         { value: "", label: "Todos los métodos" },
         { value: "EFECTIVO", label: "Efectivo" },
         { value: "TARJETA", label: "Tarjeta" },
@@ -103,7 +103,7 @@ const VentasTable = ({
                 onSearchChange={setSearchValue}
                 filterValue={filterValue}
                 onFilterChange={setFilterValue}
-                filterOptions={metodoPagoOptions}
+                filterOptions={metodo_pagoOptions}
                 placeholder="Buscar por # o vendedor..."
                 className="mb-6"
             />
@@ -141,7 +141,7 @@ const VentasTable = ({
                                             #{venta.id}
                                         </td>
                                         <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
-                                            {formatDate(venta.fechaHora)}
+                                            {formatDate(venta.fecha_hora)}
                                         </td>
                                         {showVendedor && (
                                             <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
@@ -152,8 +152,8 @@ const VentasTable = ({
                                             {formatMoney(venta.total)}
                                         </td>
                                         <td className="px-4 py-3">
-                                            <Badge variant={getMetodoPagoVariant(venta.metodoPago)}>
-                                                {venta.metodoPago}
+                                            <Badge variant={getmetodo_pagoVariant(venta.metodo_pago)}>
+                                                {venta.metodo_pago}
                                             </Badge>
                                         </td>
                                         <td className="px-4 py-3">

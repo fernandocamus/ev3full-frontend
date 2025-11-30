@@ -10,12 +10,12 @@ import { HiReceiptTax, HiCurrencyDollar, HiClipboardList } from "react-icons/hi"
 
 interface Venta {
     id: number;
-    fechaHora: string;
+    fecha_hora: string;
     vendedor: {
         nombre: string;
     };
     total: number;
-    metodoPago: "EFECTIVO" | "TARJETA" | "TRANSFERENCIA";
+    metodo_pago: "EFECTIVO" | "TARJETA" | "TRANSFERENCIA";
 }
 
 const MisVentasScreen = () => {
@@ -41,7 +41,7 @@ const MisVentasScreen = () => {
         setLoading(true);
         setError("");
         try {
-            const response = await fetch("http://localhost:8080/api/ventas/mis-ventas", {
+            const response = await fetch("http://localhost:8080/api/ventas/", {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
             });
             if (!response.ok) throw new Error("Error al cargar ventas");
@@ -66,7 +66,7 @@ const MisVentasScreen = () => {
 
     const ventasHoy = ventas.filter((v) => {
         const hoy = new Date().toDateString();
-        const fechaVenta = new Date(v.fechaHora).toDateString();
+        const fechaVenta = new Date(v.fecha_hora).toDateString();
         return hoy === fechaVenta;
     });
 
