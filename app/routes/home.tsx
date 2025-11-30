@@ -1,13 +1,38 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/atoms/spinner";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Sistema POS" },
+    { name: "description", content: "Sistema de punto de venta" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userStr = localStorage.getItem("user");
+
+    if (token && userStr) {
+      const user = JSON.parse(userStr);
+      // Redirigir según el rol
+      if (user.rol === "ADMIN") {
+        navigate("/dashboard");
+      } else {
+        navigate("/venta");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Spinner size="lg" />
+    </div>
+  );
 }
