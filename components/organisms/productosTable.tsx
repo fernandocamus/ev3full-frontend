@@ -7,7 +7,7 @@ import Pagination from "../molecules/pagination";
 import EmptyState from "../molecules/emptyState";
 import ConfirmDialog from "../molecules/confirmDialog";
 import Spinner from "../atoms/spinner";
-import { HiPencil, HiTrash, HiShoppingBag, HiPhotograph, HiCube, HiExclamationCircle } from "react-icons/hi";
+import { HiPencil, HiTrash, HiShoppingBag, HiPhotograph, HiCube, HiExclamationCircle, HiShoppingCart } from "react-icons/hi";
 
 interface Producto {
     id: number;
@@ -27,6 +27,7 @@ interface ProductosTableProps {
     productos: Producto[];
     onEdit: (productoId: number) => void;
     onDelete: (productoId: number) => Promise<void>;
+    onSell?: (producto: Producto) => void;
     loading?: boolean;
     itemsPerPage?: number;
     className?: string;
@@ -37,6 +38,7 @@ const ProductosTable = ({
     productos,
     onEdit,
     onDelete,
+    onSell,
     loading = false,
     itemsPerPage = 10,
     className = "",
@@ -112,13 +114,11 @@ const ProductosTable = ({
     return (
         <>
             <Card className={className}>
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-2">
-                        <HiCube className="w-6 h-6 text-purple-600" />
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                            {readOnly ? "Catálogo de Productos" : "Gestión de Productos"}
-                        </h2>
-                    </div>
+                <div className="flex items-center gap-2 mb-6">
+                    <HiCube className="w-6 h-6 text-purple-600" />
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                        {readOnly ? "Catálogo de Productos" : "Gestión de Productos"}
+                    </h2>
                 </div>
 
                 {error && (
@@ -139,15 +139,7 @@ const ProductosTable = ({
                 />
 
                 {productosPaginados.length === 0 ? (
-                    <EmptyState
-                        icon={<HiShoppingBag className="w-16 h-16" />}
-                        title="No se encontraron productos"
-                        description={
-                            searchValue || filterValue
-                                ? "No hay productos que coincidan con los filtros"
-                                : "Aún no hay productos registrados"
-                        }
-                    />
+                    <EmptyState icon={<HiShoppingBag className="w-16 h-16" />} title="No se encontraron productos" />
                 ) : (
                     <>
                         <div className="overflow-x-auto">
@@ -159,107 +151,57 @@ const ProductosTable = ({
                                         <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Categoría</th>
                                         <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Precio</th>
                                         <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Stock</th>
-                                        
-                                        {!readOnly && (
-                                            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Acciones</th>
-                                        )}
+                                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {productosPaginados.map((producto) => (
-                                        <tr
-                                            key={producto.id}
-                                            className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                                        >
+                                        <tr key={producto.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                             <td className="px-4 py-3">
                                                 <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden text-gray-400">
-                                                    {producto.ruta_imagen ? (
-                                                        <img
-                                                            src={producto.ruta_imagen}
-                                                            alt={producto.nombre}
-                                                            className="w-full h-full object-cover"
-                                                        />
-                                                    ) : (
-                                                        <HiPhotograph className="w-6 h-6 opacity-50" />
-                                                    )}
+                                                    {producto.ruta_imagen && producto.ruta_imagen !== "sin-imagen.jpg" ? (
+                                                        <img src={producto.ruta_imagen} alt={producto.nombre} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                                                    ) : (<HiPhotograph className="w-6 h-6 opacity-50" />)}
                                                 </div>
                                             </td>
-                                            <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
-                                                {producto.nombre}
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                <Badge variant="gray">{producto.categoria.nombre}</Badge>
-                                            </td>
-                                            <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white">
-                                                {formatMoney(producto.precio_con_iva)}
-                                            </td>
-                                            <td className="px-4 py-3">
-                                                <Badge variant={getStockVariant(producto.stock_actual)}>
-                                                    {producto.stock_actual} uds
-                                                </Badge>
-                                            </td>
+                                            <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{producto.nombre}</td>
+                                            <td className="px-4 py-3"><Badge variant="gray">{producto.categoria.nombre}</Badge></td>
+                                            <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white">{formatMoney(producto.precio_con_iva)}</td>
+                                            <td className="px-4 py-3"><Badge variant={getStockVariant(producto.stock_actual)}>{producto.stock_actual} uds</Badge></td>
                                             
-                                            {!readOnly && (
-                                                <td className="px-4 py-3">
+                                            <td className="px-4 py-3">
+                                                {!readOnly ? (
+                                                    // Botones de ADMIN
                                                     <div className="flex gap-2">
-                                                        <Button
-                                                            variant="secondary"
-                                                            onClick={() => onEdit(producto.id)}
-                                                            className="p-1.5 h-auto"
-                                                        >
-                                                            <HiPencil className="w-4 h-4" />
-                                                        </Button>
-                                                        <Button
-                                                            variant="danger"
-                                                            onClick={() => handleDeleteClick(producto)}
-                                                            className="p-1.5 h-auto"
-                                                        >
-                                                            <HiTrash className="w-4 h-4" />
-                                                        </Button>
+                                                        <Button variant="secondary" onClick={() => onEdit(producto.id)} className="p-1.5 h-auto" ><HiPencil className="w-4 h-4" /></Button>
+                                                        <Button variant="danger" onClick={() => handleDeleteClick(producto)} className="p-1.5 h-auto" ><HiTrash className="w-4 h-4" /></Button>
                                                     </div>
-                                                </td>
-                                            )}
+                                                ) : (
+                                                    // Botón de VENDEDOR (Agregar al carrito)
+                                                    <Button 
+                                                        variant="primary" 
+                                                        onClick={() => onSell && onSell(producto)} 
+                                                        className="text-xs py-1.5 px-3 flex items-center gap-1"
+                                                        disabled={producto.stock_actual <= 0}
+                                                    >
+                                                        <HiShoppingCart className="w-4 h-4" /> Agregar al carrito
+                                                    </Button>
+                                                )}
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
-
-                        {totalPages > 1 && (
-                            <Pagination
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                onPageChange={setCurrentPage}
-                                className="mt-6"
-                            />
-                        )}
-
+                        {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} className="mt-6" />}
+                        
+                        {/* Resumen de Stock */}
                         <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-700">
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                                <div>
-                                    <p className="text-gray-500 dark:text-gray-400 mb-1">Total productos</p>
-                                    <p className="text-lg font-bold text-gray-900 dark:text-white">
-                                        {productosFiltrados.length}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-gray-500 dark:text-gray-400 mb-1">Con stock</p>
-                                    <p className="text-lg font-bold text-green-600 dark:text-green-400">
-                                        {productosFiltrados.filter(p => p.stock_actual > 0).length}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-gray-500 dark:text-gray-400 mb-1">Sin stock</p>
-                                    <p className="text-lg font-bold text-red-600 dark:text-red-400">
-                                        {productosFiltrados.filter(p => p.stock_actual === 0).length}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-gray-500 dark:text-gray-400 mb-1">Stock total</p>
-                                    <p className="text-lg font-bold text-gray-900 dark:text-white">
-                                        {productosFiltrados.reduce((sum, p) => sum + p.stock_actual, 0)} uds
-                                    </p>
-                                </div>
+                                <div><p className="text-gray-500 mb-1">Total productos</p><p className="text-lg font-bold text-gray-900 dark:text-white">{productosFiltrados.length}</p></div>
+                                <div><p className="text-gray-500 mb-1">Con stock</p><p className="text-lg font-bold text-green-600">{productosFiltrados.filter(p => p.stock_actual > 0).length}</p></div>
+                                <div><p className="text-gray-500 mb-1">Sin stock</p><p className="text-lg font-bold text-red-600">{productosFiltrados.filter(p => p.stock_actual === 0).length}</p></div>
+                                <div><p className="text-gray-500 mb-1">Stock total</p><p className="text-lg font-bold text-gray-900 dark:text-white">{productosFiltrados.reduce((sum, p) => sum + p.stock_actual, 0)} uds</p></div>
                             </div>
                         </div>
                     </>

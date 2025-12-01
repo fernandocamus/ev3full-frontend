@@ -1,5 +1,5 @@
-import type { Route } from "./+types/venta";
-import VentaScreen from "../../components/layouts/misVentasScreen";
+import type { Route } from "./+types/carrito";
+import CarritoScreen from "../../components/layouts/carritoScreen";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,5 +9,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Venta() {
-  return <VentaScreen />;
+  return <CarritoScreen />;
 }

@@ -62,7 +62,7 @@ const LoginScreen = () => {
             if (data.rol === "ADMIN") {
                 navigate("/dashboard");
             } else if (data.rol === "VENDEDOR") {
-                navigate("/venta");
+                navigate("/productos");
             } else {
                 navigate("/");
             }

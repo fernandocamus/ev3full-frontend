@@ -145,6 +145,10 @@ const ProductosScreen = () => {
         }
     };
 
+    const handleSellProduct = (producto: Producto) => {
+        navigate("/carrito", { state: { productToAdd: producto } });
+    };
+
     if (!usuario) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -202,6 +206,7 @@ const ProductosScreen = () => {
                         onDelete={handleDeleteProducto}
                         loading={loading}
                         readOnly={!canEdit}
+                        onSell={handleSellProduct}
                     />
                 )}
                 

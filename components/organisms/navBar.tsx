@@ -27,12 +27,11 @@ const Navbar = ({ usuario, onLogout, className = "" }: NavbarProps) => {
             { label: "Productos", path: "/productos" },
             { label: "Ventas", path: "/ventas" },
             { label: "Días", path: "/dias" },
-            { label: "Nueva Venta", path: "/venta" },
         ];
     } else {
         navigationItems = [
-            { label: "Nueva Venta", path: "/venta" },
             { label: "Productos", path: "/productos" },
+            { label: "Carrito", path: "/carrito" },
             { label: "Mis Ventas", path: "/misVentas" },
         ];
     }

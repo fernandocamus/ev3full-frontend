@@ -109,9 +109,9 @@ const BoletaScreen = () => {
 
     const handleVolver = () => {
         if (usuario?.rol === "ADMIN") {
-            navigate("/ventas");
+            navigate("/misVentas");
         } else {
-            navigate("/mis-ventas");
+            navigate("/misVentas");
         }
     };
 
