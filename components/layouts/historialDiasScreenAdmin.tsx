@@ -7,18 +7,18 @@ import Alert from "../atoms/alert";
 import Button from "../atoms/button";
 import { HiRefresh } from "react-icons/hi";
 
-interface Dia {
+interface VentaDiaria {
     id: number;
     fecha: string;
-    cantidadVentas: number;
-    totalVendido: number;
-    totalProductosVendidos: number;
+    cantidad_ventas: number;
+    total_vendido: number;
+    total_productos_vendidos: number;
 }
 
 const HistorialDiasScreenAdmin = () => {
     const navigate = useNavigate();
     const [usuario, setUsuario] = useState<any>(null);
-    const [dias, setDias] = useState<Dia[]>([]);
+    const [VentaDiaria, setVentaDiaria] = useState<VentaDiaria[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -37,14 +37,14 @@ const HistorialDiasScreenAdmin = () => {
             return;
         }
 
-        fetchDias();
+        fetchVentaDiarias();
     }, [navigate]);
 
-    const fetchDias = async () => {
+    const fetchVentaDiarias = async () => {
         setLoading(true);
         setError("");
         try {
-            const response = await fetch("http://localhost:8080/api/dias", {
+            const response = await fetch("http://localhost:8080/api/venta-diaria", {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
@@ -53,7 +53,7 @@ const HistorialDiasScreenAdmin = () => {
             if (!response.ok) throw new Error("Error al cargar días");
 
             const data = await response.json();
-            setDias(data);
+            setVentaDiaria(data);
         } catch (err) {
             console.error("Error:", err);
             setError("No se pudo cargar el historial. Verifique su conexión.");
@@ -68,8 +68,8 @@ const HistorialDiasScreenAdmin = () => {
         navigate("/login");
     };
 
-    const handleViewDetalle = (diaId: number) => {
-        navigate(`/detalle-dia/${diaId}`);
+    const handleViewDetalle = (VentaDiariaId: number) => {
+        navigate(`/detalle-VentaDiaria/${VentaDiariaId}`);
     };
 
     if (!usuario) {
@@ -94,7 +94,7 @@ const HistorialDiasScreenAdmin = () => {
                             Consulta los días cerrados y sus estadísticas
                         </p>
                     </div>
-                    <Button variant="secondary" onClick={fetchDias} disabled={loading} className="p-2">
+                    <Button variant="secondary" onClick={fetchVentaDiarias} disabled={loading} className="p-2">
                         <HiRefresh className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
                     </Button>
                 </div>
@@ -104,13 +104,13 @@ const HistorialDiasScreenAdmin = () => {
                         <Alert type="error" title="Ocurrió un error">
                             {error}
                         </Alert>
-                        <Button onClick={fetchDias} variant="primary">
+                        <Button onClick={fetchVentaDiarias} variant="primary">
                             Reintentar Carga
                         </Button>
                     </div>
                 ) : (
                     <DiasTable 
-                        dias={dias} 
+                        dias={VentaDiaria} 
                         onViewDetalle={handleViewDetalle} 
                         loading={loading} 
                     />

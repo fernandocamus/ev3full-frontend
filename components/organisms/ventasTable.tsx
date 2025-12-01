@@ -11,7 +11,7 @@ import { HiEye, HiShoppingBag, HiCash } from "react-icons/hi";
 interface Venta {
     id: number;
     fecha_hora: string;
-    vendedor: {
+    usuario: {
         nombre: string;
     };
     total: number;
@@ -60,7 +60,7 @@ const VentasTable = ({
     const ventasFiltradas = ventas.filter((v) => {
         const matchSearch =
             v.id.toString().includes(searchValue) ||
-            v.vendedor.nombre.toLowerCase().includes(searchValue.toLowerCase());
+            v.usuario?.nombre.toLowerCase().includes(searchValue.toLowerCase());
         const matchFilter = !filterValue || v.metodo_pago === filterValue;
         return matchSearch && matchFilter;
     });
@@ -145,7 +145,7 @@ const VentasTable = ({
                                         </td>
                                         {showVendedor && (
                                             <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
-                                                {venta.vendedor.nombre}
+                                                {venta.usuario?.nombre}
                                             </td>
                                         )}
                                         <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white">

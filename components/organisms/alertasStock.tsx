@@ -9,7 +9,7 @@ interface AlertaStock {
     id: number;
     nombre: string;
     stock: number;
-    stockMinimo?: number;
+    stock_minimo?: number;
 }
 
 interface AlertasStockProps {

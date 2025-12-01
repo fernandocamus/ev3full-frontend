@@ -12,11 +12,11 @@ interface Producto {
     id?: number;
     nombre: string;
     descripcion: string;
-    precioBase: number;
+    precio_base: number;
     iva: number;
-    stockActual: number;
+    stock_actual: number;
     categoriaId: number;
-    rutaImagen?: string;
+    ruta_imagen?: string;
 }
 
 interface ProductoFormProps {
@@ -35,9 +35,9 @@ const ProductoForm = ({
     className = "",
 }: ProductoFormProps) => {
     const [nombre, setNombre] = useState(producto?.nombre || "");
-    const [precioBase, setPrecioBase] = useState(producto?.precioBase.toString() || "");
+    const [precioBase, setPrecioBase] = useState(producto?.precio_base.toString() || "");
     const [iva, setIva] = useState(producto?.iva.toString() || "19");
-    const [stockActual, setStockActual] = useState(producto?.stockActual.toString() || "");
+    const [stockActual, setStockActual] = useState(producto?.stock_actual.toString() || "");
     const [categoriaId, setCategoriaId] = useState(producto?.categoriaId.toString() || "");
     const [imagen, setImagen] = useState<File | null>(null);
     const [error, setError] = useState("");
@@ -96,9 +96,9 @@ const ProductoForm = ({
             <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="flex justify-center pb-2">
                     <ImageUpload
-                        value={producto?.rutaImagen}
+                        value={producto?.ruta_imagen}
                         onChange={setImagen}
-                        preview={producto?.rutaImagen}
+                        preview={producto?.ruta_imagen}
                     />
                 </div>
 

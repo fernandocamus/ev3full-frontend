@@ -2,7 +2,7 @@ import React from "react";
 
 interface VentaResumenProps {
     subtotal: number;
-    totalIva: number;
+    total_iva: number;
     total: number;
     montoPagado?: number;
     vuelto?: number;
@@ -11,7 +11,7 @@ interface VentaResumenProps {
 
 const VentaResumen = ({
     subtotal,
-    totalIva,
+    total_iva,
     total,
     montoPagado,
     vuelto,
@@ -33,7 +33,7 @@ const VentaResumen = ({
                 <div className="flex justify-between text-sm mb-3">
                     <span className="text-gray-600 dark:text-gray-400">IVA:</span>
                     <span className="font-semibold text-gray-900 dark:text-white">
-                        {formatPrice(totalIva)}
+                        {formatPrice(total_iva)}
                     </span>
                 </div>
             </div>

@@ -9,12 +9,12 @@ import { HiDownload, HiRefresh } from "react-icons/hi";
 
 interface Venta {
     id: number;
-    fechaHora: string;
-    vendedor: {
+    fecha_hora: string;
+    usuario: {
         nombre: string;
     };
     total: number;
-    metodoPago: "EFECTIVO" | "TARJETA" | "TRANSFERENCIA";
+    metodo_pago: "EFECTIVO" | "TARJETA" | "TRANSFERENCIA";
 }
 
 const HistorialVentasScreenAdmin = () => {

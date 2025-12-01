@@ -10,9 +10,9 @@ import { HiEye, HiCalendar, HiChartBar, HiTrendingUp, HiTrendingDown } from "rea
 interface Dia {
     id: number;
     fecha: string;
-    cantidadVentas: number;
-    totalVendido: number;
-    totalProductosVendidos: number;
+    cantidad_ventas: number;
+    total_vendido: number;
+    total_productos_vendidos: number;
 }
 
 interface DiasTableProps {
@@ -42,12 +42,11 @@ const DiasTable = ({
     const endIndex = startIndex + itemsPerPage;
     const diasPaginados = dias.slice(startIndex, endIndex);
 
-    const totalVendidoMes = dias.reduce((sum, d) => sum + d.totalVendido, 0);
+    const totalVendidoMes = dias.reduce((sum, d) => sum + d.total_vendido, 0);
     const promedioDiario = dias.length > 0 ? totalVendidoMes / dias.length : 0;
-    const mejorDia = dias.length > 0 ? dias.reduce((max, d) => d.totalVendido > max.totalVendido ? d : max) : null;
-    const peorDia = dias.length > 0 ? dias.reduce((min, d) => d.totalVendido < min.totalVendido ? d : min) : null;
-    const totalProductos = dias.reduce((sum, d) => sum + d.totalProductosVendidos, 0);
-
+    const mejorDia = dias.length > 0 ? dias.reduce((max, d) => d.total_vendido > max.total_vendido ? d : max) : null;
+    const peorDia = dias.length > 0 ? dias.reduce((min, d) => d.total_vendido < min.total_vendido ? d : min) : null;
+    const totalProductos = dias.reduce((sum, d) => sum + d.total_productos_vendidos, 0);
     if (loading) {
         return (
             <div className="flex items-center justify-center py-12">
@@ -94,13 +93,13 @@ const DiasTable = ({
                                             {formatDate(dia.fecha)}
                                         </td>
                                         <td className="px-4 py-3 text-sm">
-                                            <Badge variant="blue">{dia.cantidadVentas}</Badge>
+                                            <Badge variant="blue">{dia.cantidad_ventas}</Badge>
                                         </td>
                                         <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white">
-                                            {formatMoney(dia.totalVendido)}
+                                            {formatMoney(dia.total_vendido)}
                                         </td>
                                         <td className="px-4 py-3 text-sm">
-                                            <Badge variant="green">{dia.totalProductosVendidos} uds</Badge>
+                                            <Badge variant="green">{dia.total_productos_vendidos} uds</Badge>
                                         </td>
                                         <td className="px-4 py-3">
                                             <Button
@@ -170,7 +169,7 @@ const DiasTable = ({
                                                 {formatDate(mejorDia.fecha)}
                                             </p>
                                             <p className="text-sm font-semibold text-purple-600 dark:text-purple-400">
-                                                {formatMoney(mejorDia.totalVendido)}
+                                                {formatMoney(mejorDia.total_vendido)}
                                             </p>
                                         </div>
                                     </div>
@@ -185,7 +184,7 @@ const DiasTable = ({
                                                 {formatDate(peorDia.fecha)}
                                             </p>
                                             <p className="text-sm font-semibold text-red-600 dark:text-red-400">
-                                                {formatMoney(peorDia.totalVendido)}
+                                                {formatMoney(peorDia.total_vendido)}
                                             </p>
                                         </div>
                                     </div>
