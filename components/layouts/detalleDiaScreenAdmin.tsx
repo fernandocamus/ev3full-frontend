@@ -5,7 +5,6 @@ import Card from "../atoms/card";
 import Button from "../atoms/button";
 import Spinner from "../atoms/spinner";
 import Alert from "../atoms/alert";
-import TopProductos from "../organisms/topProductos";
 import VentasTable from "../organisms/ventasTable";
 import { 
     HiArrowLeft, 
@@ -26,7 +25,6 @@ interface DetalleDia {
     totalTarjeta: number;
     totalTransferencia: number;
     observaciones: string;
-    topProductos: Array<any>;
     ventas: Array<any>;
 }
 
@@ -204,7 +202,6 @@ const DetalleDiaScreenAdmin = () => {
                                 </div>
                             </Card>
 
-                            <TopProductos productos={detalle.topProductos} />
                         </div>
 
                         {detalle.observaciones && (

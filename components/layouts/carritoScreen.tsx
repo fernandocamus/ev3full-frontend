@@ -14,7 +14,10 @@ interface Producto {
     precioConIva: number;
     stockActual: number;
     rutaImagen?: string;
-    categoria: { nombre: string };
+    categoria: {
+        id: number;
+        nombre: string;
+    };
 }
 
 interface ItemCarrito {
@@ -43,22 +46,19 @@ const CarritoScreen = () => {
             return;
         }
 
-        if (location.state && location.state.productToAdd) {
-            const prod = location.state.productToAdd;
-            const producto: Producto = {
-                id: prod.id,
-                nombre: prod.nombre,
-                precioBase: prod.precio_base || prod.precioBase,
-                iva: prod.iva,
-                precioConIva: prod.precio_con_iva || prod.precioConIva,
-                stockActual: prod.stock_actual || prod.stockActual,
-                rutaImagen: prod.ruta_imagen || prod.rutaImagen,
-                categoria: prod.categoria
-            };
-            setCarrito([{ producto, cantidad: 1 }]);
-            window.history.replaceState({}, document.title);
+        const carritoGuardado = localStorage.getItem("carrito");
+        if (carritoGuardado) {
+            setCarrito(JSON.parse(carritoGuardado));
         }
-    }, [navigate, location]);
+    }, [navigate]);
+
+    useEffect(() => {
+        if (carrito.length > 0) {
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+        } else {
+            localStorage.removeItem("carrito");
+        }
+    }, [carrito]);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -67,7 +67,7 @@ const CarritoScreen = () => {
     };
 
     const formatMoney = (val: number) => `$${val.toLocaleString("es-CL")}`;
-    
+
     const updateQuantity = (productoId: number, nuevaCantidad: number, stockMax: number) => {
         if (nuevaCantidad <= 0) {
             setCarrito((prev) => prev.filter((item) => item.producto.id !== productoId));
@@ -92,13 +92,12 @@ const CarritoScreen = () => {
     const esEfectivo = metodoPago === "efectivo";
     const pagoInsuficiente = esEfectivo && montoPagado < totalVenta && carrito.length > 0;
 
-    const handleConfirmVenta = async () => {        
+    const handleConfirmVenta = async () => {
         setLoading(true);
         setError("");
         setSuccess("");
-        
+
         try {
-            // ✅ PAYLOAD EXACTO según tu CreateVentaDto
             const payload = {
                 metodo_pago: metodoPago.toLowerCase(),
                 productos: carrito.map(item => ({
@@ -132,9 +131,9 @@ const CarritoScreen = () => {
 
             setSuccess("¡Venta realizada con éxito!");
             setCarrito([]);
+            localStorage.removeItem("carrito");
             setMetodoPago("efectivo");
             setMontoPagadoStr("");
-            
             setTimeout(() => {
                 setSuccess("");
                 navigate("/misVentas");
@@ -154,7 +153,6 @@ const CarritoScreen = () => {
             <Navbar usuario={usuario} onLogout={handleLogout} />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                
                 {success && <Alert type="success" title="Venta Exitosa" className="mb-6">{success}</Alert>}
                 {error && <Alert type="error" title="Error" className="mb-6">{error}</Alert>}
 
@@ -220,14 +218,14 @@ const CarritoScreen = () => {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center space-x-2">
-                                                    <button 
+                                                    <button
                                                         onClick={() => updateQuantity(item.producto.id, item.cantidad - 1, item.producto.stockActual)}
                                                         className="p-1 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 text-gray-600 dark:text-white"
                                                     >
                                                         <HiMinus className="w-3 h-3" />
                                                     </button>
                                                     <span className="text-sm font-bold w-8 text-center text-gray-900 dark:text-white">{item.cantidad}</span>
-                                                    <button 
+                                                    <button
                                                         onClick={() => updateQuantity(item.producto.id, item.cantidad + 1, item.producto.stockActual)}
                                                         disabled={item.cantidad >= item.producto.stockActual}
                                                         className="p-1 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 disabled:opacity-50 text-gray-600 dark:text-white"
@@ -240,7 +238,7 @@ const CarritoScreen = () => {
                                                 {formatMoney(item.producto.precioConIva * item.cantidad)}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <button 
+                                                <button
                                                     onClick={() => removeFromCart(item.producto.id)}
                                                     className="text-red-600 hover:text-red-900 dark:hover:text-red-400 p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20"
                                                 >
@@ -258,7 +256,7 @@ const CarritoScreen = () => {
                 {carrito.length > 0 && (
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex flex-col lg:flex-row justify-between gap-8">
-                            
+
                             <div className="flex-1">
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Método de Pago</h3>
                                 <div className="grid grid-cols-3 gap-3 mb-4">
@@ -270,11 +268,10 @@ const CarritoScreen = () => {
                                         <button
                                             key={m.id}
                                             onClick={() => setMetodoPago(m.id)}
-                                            className={`flex flex-col items-center justify-center p-3 rounded-lg border transition-all ${
-                                                metodoPago === m.id 
-                                                ? "border-purple-600 bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 ring-1 ring-purple-600" 
+                                            className={`flex flex-col items-center justify-center p-3 rounded-lg border transition-all ${metodoPago === m.id
+                                                ? "border-purple-600 bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 ring-1 ring-purple-600"
                                                 : "border-gray-200 dark:border-gray-700 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700"
-                                            }`}
+                                                }`}
                                         >
                                             {m.icon}
                                             <span className="text-xs font-semibold mt-1">{m.label}</span>
@@ -295,9 +292,8 @@ const CarritoScreen = () => {
                                                 type="number"
                                                 value={montoPagadoStr}
                                                 onChange={(e) => setMontoPagadoStr(e.target.value)}
-                                                className={`pl-7 block w-full rounded-md shadow-sm sm:text-sm p-2.5 border ${
-                                                    pagoInsuficiente ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-gray-300 dark:border-gray-600 dark:bg-gray-700"
-                                                }`}
+                                                className={`pl-7 block w-full rounded-md shadow-sm sm:text-sm p-2.5 border ${pagoInsuficiente ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+                                                    }`}
                                                 placeholder="0"
                                             />
                                         </div>
@@ -316,7 +312,7 @@ const CarritoScreen = () => {
                                         <span>IVA (19%)</span>
                                         <span>{formatMoney(totalVenta - Math.round(totalVenta / 1.19))}</span>
                                     </div>
-                                    
+
                                     <div className="border-t border-gray-200 dark:border-gray-600 pt-3 mt-3">
                                         <div className="flex justify-between items-center">
                                             <span className="text-xl font-bold text-gray-900 dark:text-white">Total a Pagar</span>
@@ -335,9 +331,9 @@ const CarritoScreen = () => {
                                         </div>
                                     )}
 
-                                    <Button 
-                                        variant="primary" 
-                                        fullWidth 
+                                    <Button
+                                        variant="primary"
+                                        fullWidth
                                         className="mt-6 py-3 text-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all"
                                         onClick={handleConfirmVenta}
                                         disabled={carrito.length === 0 || loading || pagoInsuficiente}

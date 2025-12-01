@@ -171,13 +171,11 @@ const ProductosTable = ({
                                             
                                             <td className="px-4 py-3">
                                                 {!readOnly ? (
-                                                    // Botones de ADMIN
                                                     <div className="flex gap-2">
                                                         <Button variant="secondary" onClick={() => onEdit(producto.id)} className="p-1.5 h-auto" ><HiPencil className="w-4 h-4" /></Button>
                                                         <Button variant="danger" onClick={() => handleDeleteClick(producto)} className="p-1.5 h-auto" ><HiTrash className="w-4 h-4" /></Button>
                                                     </div>
                                                 ) : (
-                                                    // Botón de VENDEDOR (Agregar al carrito)
                                                     <Button 
                                                         variant="primary" 
                                                         onClick={() => onSell && onSell(producto)} 
@@ -195,7 +193,6 @@ const ProductosTable = ({
                         </div>
                         {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} className="mt-6" />}
                         
-                        {/* Resumen de Stock */}
                         <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-700">
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                 <div><p className="text-gray-500 mb-1">Total productos</p><p className="text-lg font-bold text-gray-900 dark:text-white">{productosFiltrados.length}</p></div>

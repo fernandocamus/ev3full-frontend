@@ -4,7 +4,6 @@ import Navbar from "../organisms/navBar";
 import Button from "../atoms/button";
 import Spinner from "../atoms/spinner";
 import ConsolidadoDia from "../organisms/consolidadoDia";
-import TopProductos from "../organisms/topProductos";
 import AlertasStock from "../organisms/alertasStock";
 import { HiShoppingCart, HiCash, HiPlus } from "react-icons/hi";
 
@@ -40,7 +39,6 @@ const DashBoardScreen = () => {
     const [loading, setLoading] = useState(true);
     const [usuario, setUsuario] = useState<any>(null);
     const [consolidado, setConsolidado] = useState<ConsolidadoDia | null>(null);
-    const [topProductos, setTopProductos] = useState<TopProducto[]>([]);
     const [alertasStock, setAlertasStock] = useState<AlertaStock[]>([]);
 
     useEffect(() => {
@@ -63,14 +61,12 @@ const DashBoardScreen = () => {
 
     const fetchDashboardData = async () => {
         try {
-            const [consolidadoRes, topRes, alertasRes] = await Promise.all([
+            const [consolidadoRes, alertasRes] = await Promise.all([
                 fetch("http://localhost:8080/api/dashboard/consolidado", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }),
-                fetch("http://localhost:8080/api/dashboard/top-productos", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }),
                 fetch("http://localhost:8080/api/productos/alertas-stock", { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } })
             ]);
 
             if (consolidadoRes.ok) setConsolidado(await consolidadoRes.json());
-            if (topRes.ok) setTopProductos(await topRes.json());
             if (alertasRes.ok) setAlertasStock(await alertasRes.json());
 
         } catch (error) {
@@ -109,11 +105,7 @@ const DashBoardScreen = () => {
                         <HiShoppingCart className="w-5 h-5" />
                         Ver Ventas
                     </Button>
-                    <Button variant="primary" onClick={() => navigate("/venta")} className="flex items-center gap-2">
-                        <HiPlus className="w-5 h-5" />
-                        Nueva Venta
-                    </Button>
-                    <Button variant="danger" onClick={() => navigate("/cerrar-dia")} className="flex items-center gap-2">
+                    <Button variant="danger" onClick={() => navigate("/cerrarDia")} className="flex items-center gap-2">
                         <HiCash className="w-5 h-5" />
                         Cerrar Día
                     </Button>
@@ -121,9 +113,7 @@ const DashBoardScreen = () => {
 
                 <ConsolidadoDia consolidado={consolidado} loading={false} className="mb-8" />
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    <TopProductos productos={topProductos} maxItems={5} />
-
+                <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-8">
                     <AlertasStock alertas={alertasStock} onViewProducto={handleViewProducto} />
                 </div>
             </main>

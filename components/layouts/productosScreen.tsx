@@ -6,7 +6,7 @@ import ProductoForm from "../organisms/productoForm";
 import Button from "../atoms/button";
 import Spinner from "../atoms/spinner";
 import Alert from "../atoms/alert";
-import { HiPlus, HiX } from "react-icons/hi";
+import { HiPlus, HiX, HiShoppingCart } from "react-icons/hi";
 
 interface Producto {
     id: number;
@@ -30,7 +30,7 @@ const ProductosScreen = () => {
     const [productos, setProductos] = useState<Producto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    
+
     const [showModal, setShowModal] = useState(false);
     const [productoEditar, setProductoEditar] = useState<Producto | undefined>(undefined);
     const [successMessage, setSuccessMessage] = useState("");
@@ -57,7 +57,7 @@ const ProductosScreen = () => {
 
     const fetchProductos = async () => {
         setLoading(true);
-        setError(""); 
+        setError("");
         try {
             const response = await fetch("http://localhost:8080/api/productos", {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -146,8 +146,40 @@ const ProductosScreen = () => {
     };
 
     const handleSellProduct = (producto: Producto) => {
-        navigate("/carrito", { state: { productToAdd: producto } });
+        const carritoGuardado = localStorage.getItem("carrito");
+        const carritoActual: Array<{ producto: any, cantidad: number }> = carritoGuardado
+            ? JSON.parse(carritoGuardado)
+            : [];
+
+        const indexExistente = carritoActual.findIndex(
+            item => item.producto.id === producto.id
+        );
+
+        if (indexExistente >= 0) {
+            carritoActual[indexExistente].cantidad += 1;
+        } else {
+            const nuevoItem = {
+                producto: {
+                    id: producto.id,
+                    nombre: producto.nombre,
+                    precioBase: producto.precio_base,
+                    iva: producto.iva,
+                    precioConIva: producto.precio_con_iva,
+                    stockActual: producto.stock_actual,
+                    rutaImagen: producto.ruta_imagen,
+                    categoria: producto.categoria
+                },
+                cantidad: 1
+            };
+            carritoActual.push(nuevoItem);
+        }
+
+        localStorage.setItem("carrito", JSON.stringify(carritoActual));
+
+        setSuccessMessage(`"${producto.nombre}" agregado al carrito`);
+        setTimeout(() => setSuccessMessage(""), 3000);
     };
+
 
     if (!usuario) {
         return (
@@ -190,7 +222,7 @@ const ProductosScreen = () => {
                             {canEdit ? "Administra el catálogo de productos" : "Consulta de precios y stock"}
                         </p>
                     </div>
-                    
+
                     {canEdit && (
                         <Button variant="primary" onClick={handleAddProducto} className="flex items-center gap-2">
                             <HiPlus className="w-5 h-5" />
@@ -209,7 +241,7 @@ const ProductosScreen = () => {
                         onSell={handleSellProduct}
                     />
                 )}
-                
+
                 {loading && (
                     <div className="flex justify-center py-12">
                         <Spinner size="lg" />
@@ -227,7 +259,7 @@ const ProductosScreen = () => {
                         }}
                     />
                     <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                        <button 
+                        <button
                             onClick={() => setShowModal(false)}
                             className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 z-10"
                         >
@@ -236,7 +268,7 @@ const ProductosScreen = () => {
 
                         <div className="p-1">
                             <ProductoForm
-                                producto={productoEditar as any} 
+                                producto={productoEditar as any}
                                 onSubmit={handleSubmitProducto}
                                 onCancel={() => {
                                     setShowModal(false);
@@ -247,7 +279,26 @@ const ProductosScreen = () => {
                     </div>
                 </div>
             )}
+            {(() => {
+                const carritoGuardado = localStorage.getItem("carrito");
+                const carritoActual = carritoGuardado ? JSON.parse(carritoGuardado) : [];
+                const totalItems = carritoActual.reduce((sum: number, item: any) => sum + item.cantidad, 0);
+
+                return totalItems > 0 ? (
+                    <button
+                        onClick={() => navigate("/carrito")}
+                        className="fixed bottom-6 right-6 bg-purple-600 hover:bg-purple-700 text-white rounded-full p-4 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200 flex items-center gap-3 z-40"
+                    >
+                        <HiShoppingCart className="w-6 h-6" />
+                        <span className="font-bold">Ver Carrito</span>
+                        <span className="bg-white text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
+                            {totalItems}
+                        </span>
+                    </button>
+                ) : null;
+            })()}
         </div>
+
     );
 };
 

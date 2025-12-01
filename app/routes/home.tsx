@@ -23,7 +23,7 @@ export default function Home() {
       if (user.rol === "ADMIN") {
         navigate("/dashboard");
       } else {
-        navigate("/venta");
+        navigate("/productos");
       }
     } else {
       navigate("/login");

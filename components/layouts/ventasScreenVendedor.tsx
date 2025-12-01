@@ -104,36 +104,6 @@ const VentasScreenVendedor = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <Card className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                                Ventas de hoy
-                            </p>
-                            <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                                {totalVentasHoy}
-                            </p>
-                        </div>
-                        <div className="p-3 bg-blue-50 rounded-full text-blue-500">
-                            <HiReceiptTax className="w-8 h-8" />
-                        </div>
-                    </Card>
-
-                    <Card className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                                Total vendido hoy
-                            </p>
-                            <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
-                                ${totalVendidoHoy.toLocaleString("es-CL")}
-                            </p>
-                        </div>
-                        <div className="p-3 bg-purple-50 rounded-full text-purple-500">
-                            <HiCurrencyDollar className="w-8 h-8" />
-                        </div>
-                    </Card>
-                </div>
-
                 {error && (
                     <div className="flex flex-col items-center justify-center py-8">
                         <Alert type="error" title="Error">{error}</Alert>
