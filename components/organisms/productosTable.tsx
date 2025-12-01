@@ -12,9 +12,9 @@ import { HiPencil, HiTrash, HiShoppingBag, HiPhotograph, HiCube, HiExclamationCi
 interface Producto {
     id: number;
     nombre: string;
-    precioConIva: number;
-    stockActual: number;
-    rutaImagen?: string;
+    precio_con_iva: number;
+    stock_actual: number;
+    ruta_imagen?: string;
     categoria: {
         nombre: string;
     };
@@ -170,9 +170,9 @@ const ProductosTable = ({
                                         >
                                             <td className="px-4 py-3">
                                                 <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center overflow-hidden text-gray-400">
-                                                    {producto.rutaImagen ? (
+                                                    {producto.ruta_imagen ? (
                                                         <img
-                                                            src={producto.rutaImagen}
+                                                            src={producto.ruta_imagen}
                                                             alt={producto.nombre}
                                                             className="w-full h-full object-cover"
                                                         />
@@ -188,11 +188,11 @@ const ProductosTable = ({
                                                 <Badge variant="gray">{producto.categoria.nombre}</Badge>
                                             </td>
                                             <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white">
-                                                {formatMoney(producto.precioConIva)}
+                                                {formatMoney(producto.precio_con_iva)}
                                             </td>
                                             <td className="px-4 py-3">
-                                                <Badge variant={getStockVariant(producto.stockActual)}>
-                                                    {producto.stockActual} uds
+                                                <Badge variant={getStockVariant(producto.stock_actual)}>
+                                                    {producto.stock_actual} uds
                                                 </Badge>
                                             </td>
                                             
@@ -242,19 +242,19 @@ const ProductosTable = ({
                                 <div>
                                     <p className="text-gray-500 dark:text-gray-400 mb-1">Con stock</p>
                                     <p className="text-lg font-bold text-green-600 dark:text-green-400">
-                                        {productosFiltrados.filter(p => p.stockActual > 0).length}
+                                        {productosFiltrados.filter(p => p.stock_actual > 0).length}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500 dark:text-gray-400 mb-1">Sin stock</p>
                                     <p className="text-lg font-bold text-red-600 dark:text-red-400">
-                                        {productosFiltrados.filter(p => p.stockActual === 0).length}
+                                        {productosFiltrados.filter(p => p.stock_actual === 0).length}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500 dark:text-gray-400 mb-1">Stock total</p>
                                     <p className="text-lg font-bold text-gray-900 dark:text-white">
-                                        {productosFiltrados.reduce((sum, p) => sum + p.stockActual, 0)} uds
+                                        {productosFiltrados.reduce((sum, p) => sum + p.stock_actual, 0)} uds
                                     </p>
                                 </div>
                             </div>
