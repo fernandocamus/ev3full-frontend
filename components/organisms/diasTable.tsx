@@ -130,7 +130,7 @@ const DiasTable = ({
                             <HiChartBar className="w-5 h-5 text-gray-500" />
                             Resumen del período:
                         </h3>
-                        
+
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm mb-6">
                             <div>
                                 <p className="text-gray-500 dark:text-gray-400 mb-1">Total días</p>
