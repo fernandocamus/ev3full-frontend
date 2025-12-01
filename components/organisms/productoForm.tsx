@@ -35,19 +35,19 @@ const ProductoForm = ({
     className = "",
 }: ProductoFormProps) => {
     const [nombre, setNombre] = useState(producto?.nombre || "");
-    const [precioBase, setPrecioBase] = useState(producto?.precio_base.toString() || "");
-    const [iva, setIva] = useState(producto?.iva.toString() || "19");
+    const [precioBase, setPrecioBase] = useState(producto?.precio_base.toString() || "");    const [iva, setIva] = useState(producto?.iva.toString() || "19");
     const [stockActual, setStockActual] = useState(producto?.stock_actual.toString() || "");
-    const [categoriaId, setCategoriaId] = useState(producto?.categoriaId.toString() || "");
     const [imagen, setImagen] = useState<File | null>(null);
     const [error, setError] = useState("");
+    const [categoriaId, setCategoriaId] = useState(producto?.categoriaId?.toString() || "");
 
     const categorias = [
-        { value: "1", label: "Electrónica" },
-        { value: "2", label: "Ropa" },
-        { value: "3", label: "Alimentos" },
-        { value: "4", label: "Hogar" },
-    ];
+    { value: "1", label: "Electrónica" },
+    { value: "2", label: "Ropa" },
+    { value: "3", label: "Alimentos" },
+    { value: "4", label: "Hogar" },
+];
+
 
     const calcularPrecioConIva = () => {
         const precio = parseFloat(precioBase) || 0;
@@ -66,10 +66,12 @@ const ProductoForm = ({
 
         const formData = new FormData();
         formData.append("nombre", nombre);
-        formData.append("precioBase", precioBase);
+        formData.append("descripcion", nombre);
+        formData.append("precio_base", precioBase); 
         formData.append("iva", iva);
-        formData.append("stockActual", stockActual);
+        formData.append("stock_actual", stockActual);
         formData.append("categoriaId", categoriaId);
+        formData.append("ruta_imagen", "sin-imagen.jpg");
         if (imagen) formData.append("imagen", imagen);
         if (producto?.id) formData.append("id", producto.id.toString());
 

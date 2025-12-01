@@ -12,6 +12,9 @@ import { HiPencil, HiTrash, HiShoppingBag, HiPhotograph, HiCube, HiExclamationCi
 interface Producto {
     id: number;
     nombre: string;
+    descripcion: string;
+    precio_base: number;
+    iva: number;
     precio_con_iva: number;
     stock_actual: number;
     ruta_imagen?: string;

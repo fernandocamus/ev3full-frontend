@@ -12,11 +12,11 @@ interface Producto {
     id: number;
     nombre: string;
     descripcion: string;
-    precioBase: number;
+    precio_base: number;
     iva: number;
-    precioConIva: number;
-    stockActual: number;
-    rutaImagen?: string;
+    precio_con_iva: number;
+    stock_actual: number;
+    ruta_imagen?: string;
     categoria: {
         id: number;
         nombre: string;
