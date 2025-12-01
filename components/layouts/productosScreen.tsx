@@ -119,7 +119,7 @@ const ProductosScreen = () => {
                 ? `http://localhost:8080/api/productos/${productoEditar.id}`
                 : "http://localhost:8080/api/productos";
 
-            const method = productoEditar ? "PUT" : "POST";
+            const method = productoEditar ? "PATCH" : "POST";
 
             const response = await fetch(url, {
                 method,

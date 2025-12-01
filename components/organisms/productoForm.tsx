@@ -72,8 +72,12 @@ const ProductoForm = ({
         formData.append("stock_actual", stockActual);
         formData.append("categoriaId", categoriaId);
         formData.append("ruta_imagen", "sin-imagen.jpg");
-        if (imagen) formData.append("imagen", imagen);
-        if (producto?.id) formData.append("id", producto.id.toString());
+        if (imagen) {
+            formData.append("imagen", imagen);
+        } else if (!producto) {
+             formData.append("ruta_imagen", "sin-imagen.jpg");
+        }
+        /*if (producto?.id) formData.append("id", producto.id.toString());*/
 
         try {
             await onSubmit(formData);
