@@ -83,33 +83,12 @@ const BoletaScreen = () => {
     };
 
     const handleDescargar = async () => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/ventas/${id}/pdf`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
-
-            if (!response.ok) throw new Error("Error al generar PDF");
-
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `boleta-${id}.pdf`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        } catch (error) {
-            console.error("Error:", error);
-            setError("Error al descargar el PDF. Intente nuevamente.");
-        }
+        window.print();
     };
 
     const handleVolver = () => {
         if (usuario?.rol === "ADMIN") {
-            navigate("/misVentas");
+            navigate("/Ventas");
         } else {
             navigate("/misVentas");
         }
@@ -160,7 +139,7 @@ const BoletaScreen = () => {
                         vuelto={venta.vuelto}
                         showActions={true}
                         onImprimir={handleImprimir}
-                        onDescargar={handleDescargar}
+                        /*onDescargar={handleDescargar}*/
                         className="shadow-lg"
                     />
                 ) : null}
